@@ -29,7 +29,7 @@ func ExecutePipeline(jobfree ...job) {
 func SingleHash(in, out chan interface{}) {
 
 	var data string
-
+	fmt.Println("SingleHash kirdi : ")
 	for i := range in {
 		fmt.Println("SingleHash znacheniya in : ")
 		fmt.Println(i.(int))
