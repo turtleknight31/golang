@@ -39,5 +39,6 @@ func SingleHash(in, out chan interface{}) {
 
 	out <- data
 	fmt.Println("Outka jazdyk: " + data)
+	fmt.Println("Outka jazdyk test2 : " + data)
 
 }
