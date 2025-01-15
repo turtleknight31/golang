@@ -27,27 +27,39 @@ func ExecutePipeline(jobfree ...job) {
 }
 
 func SingleHash(in, out chan interface{}) {
-
-	var data string
-	iter := 0
 	fmt.Println("SingleHash kirdi : ")
 	fmt.Println(len(in))
 	for i := range in {
-		fmt.Println("SingleHash znacheniya in : ")
-		fmt.Println(i.(int))
-		if iter == 0 {
-			data += DataSignerCrc32(strconv.Itoa(i.(int)))
-			data += "~"
-		}
-		if iter > 0 {
-			data += DataSignerMd5(data)
-		}
+		data := DataSignerCrc32(strconv.Itoa(i.(int))) + "~" + DataSignerCrc32(DataSignerMd5(strconv.Itoa(i.(int))))
+		fmt.Println("SingleHash kirdi : " + data)
+		out <- data
+	}
 
-		iter++
+}
+
+func MultiHash(in, out chan interface{}) {
+	s := []int{0, 1, 2, 3, 4, 5}
+	fmt.Println("MultiHash kirdi : ")
+	for i := range in {
+		var data string
+		for _, j := range s {
+			data += DataSignerCrc32(strconv.Itoa((j)) + i.(string))
+		}
+		fmt.Println("MultiHash kirdi : " + data)
+		out <- data
+	}
+}
+
+func CombineResults(in, out chan interface{}) {
+	var data string
+	j := 0
+	for i := range in {
+		data += i.(string)
+		if j == 0 {
+			data += "_"
+		}
+		j++
 	}
 
 	out <- data
-	fmt.Println("Outka jazdyk: " + data)
-	fmt.Println("Outka jazdyk test2 : " + data)
-
 }
