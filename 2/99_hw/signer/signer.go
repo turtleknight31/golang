@@ -29,12 +29,21 @@ func ExecutePipeline(jobfree ...job) {
 func SingleHash(in, out chan interface{}) {
 
 	var data string
+	iter := 0
 	fmt.Println("SingleHash kirdi : ")
+	fmt.Println(len(in))
 	for i := range in {
 		fmt.Println("SingleHash znacheniya in : ")
 		fmt.Println(i.(int))
-		data += DataSignerCrc32(strconv.Itoa(i.(int)))
-		data += "~"
+		if iter == 0 {
+			data += DataSignerCrc32(strconv.Itoa(i.(int)))
+			data += "~"
+		}
+		if iter > 0 {
+			data += DataSignerMd5(data)
+		}
+
+		iter++
 	}
 
 	out <- data
