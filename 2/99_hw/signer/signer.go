@@ -27,11 +27,9 @@ func ExecutePipeline(jobfree ...job) {
 }
 
 func SingleHash(in, out chan interface{}) {
-	fmt.Println("SingleHash kirdi : ")
 	fmt.Println(len(in))
 	for i := range in {
 		data := DataSignerCrc32(strconv.Itoa(i.(int))) + "~" + DataSignerCrc32(DataSignerMd5(strconv.Itoa(i.(int))))
-		fmt.Println("SingleHash kirdi : " + data)
 		out <- data
 	}
 
@@ -39,13 +37,11 @@ func SingleHash(in, out chan interface{}) {
 
 func MultiHash(in, out chan interface{}) {
 	s := []int{0, 1, 2, 3, 4, 5}
-	fmt.Println("MultiHash kirdi : ")
 	for i := range in {
 		var data string
 		for _, j := range s {
 			data += DataSignerCrc32(strconv.Itoa((j)) + i.(string))
 		}
-		fmt.Println("MultiHash kirdi : " + data)
 		out <- data
 	}
 }
@@ -55,6 +51,7 @@ func CombineResults(in, out chan interface{}) {
 	j := 0
 	for i := range in {
 		data += i.(string)
+
 		if j == 0 {
 			data += "_"
 		}
